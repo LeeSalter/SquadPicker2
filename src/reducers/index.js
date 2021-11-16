@@ -22,8 +22,6 @@ export default function reducer (state, action){
             midfielders:0,
             forwards:0
         }
-
-        console.log("initial state: " + state.goalkeepers);
     }
 
     switch (action.type){
@@ -86,9 +84,7 @@ export default function reducer (state, action){
             }
             
         case REMOVE_PLAYER:
-            console.log("removing player: " + action.payload.id)
             let playerToRemove = FindPlayerById(action.payload.id);
-            console.log(playerToRemove);
             if(playerToRemove===null){
                 return;
             }            
@@ -216,7 +212,6 @@ export default function reducer (state, action){
                 midfielders: midfielders,
                 forwards: forwards};
         case LOAD_FORMATION:
-            console.log("applying formation: " + action.payload.data);
             return {...state,
             selectedFormation:action.payload.data}
 
@@ -226,7 +221,6 @@ export default function reducer (state, action){
 }
 
 const FindPlayerById=(id)=>{
-    console.log("Looking for player with id: " + {id})
     const allPlayers= SquadList.players.goalkeepers.concat(SquadList.players.defenders)
             .concat(SquadList.players.midfielders)
             .concat(SquadList.players.forwards);
@@ -239,7 +233,6 @@ const setValidity = (state, formation) => {
 
     //DEFENDERS
     if(state.defenders > formation.defenders){
-        console.log("too many defenders")
         teamAfterStateChange.map(p=> {
             if(p.selected && p.position==="DEF"){
                 p.validity="player-invalid";

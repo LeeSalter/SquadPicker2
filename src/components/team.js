@@ -6,7 +6,6 @@ import Player from './player';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
-import { containerClasses } from '@mui/material';
 
 class Team extends React.Component{
     

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addPlayer, removePlayer } from '../actions/team';
-import ListItem from '@mui/material/ListItem';
 import { Avatar } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -20,11 +19,9 @@ class Player extends React.Component{
 
     const handleListItemClick = (event) => {
         if(selected){
-            console.log("Removing "+ id + " from squad")
             this.props.removePlayerFromTeam(id);         
         }
         else{
-            console.log("Adding " + id + " to squad")
             this.props.addPlayerToTeam(id);
         };
     }
