@@ -1,24 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import Pitch from './components/pitch';
+import Squad from './components/squad';
+import Team from './components/team';
+import FormationPicker from './components/formationPicker'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">  
+  <h1>World's Best XI</h1>  
+  <div className="row">
+    <Team className="column"/>
+    <div className="column">
+      <Pitch/>
+      <FormationPicker />
     </div>
+    <Squad className="column"/>
+    </div>
+    </div>
+    
   );
 }
 
