@@ -1,5 +1,5 @@
-import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD } from "../actions/team";
-import { CHANGE_FORMATION } from "../actions/formation";
+import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD, SQUAD_SAVED, CAN_LOAD } from "../actions/team";
+import { CHANGE_FORMATION, LOAD_FORMATION } from "../actions/formation";
 import SquadList from "../data/players";
 import Formations from "../data/formations";
 
@@ -16,6 +16,7 @@ export default function reducer (state, action){
             squadPlayers: allPlayers,
             formations: Formations,
             selectedFormation:{id:1, goalkeepers:1, defenders:4, midfielders:4, forwards:2},
+            canLoadSquad:false,
             goalkeepers:0,
             defenders:0,
             midfielders:0,
@@ -183,122 +184,42 @@ export default function reducer (state, action){
             }
         case CHANGE_FORMATION:
             var formation=state.formations.find(formation=>formation.id===action.payload.id);
-            const teamAfterFormationChange = [...state.squadPlayers];
             
-            //Do we still have a valid team, based upon the change in formation?
-
-            //DEFENDERS
-            if(state.defenders > formation.defenders){
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="DEF"){
-                        p.validity="player-invalid";
-                    }
-                })
-            }
-
-            if(state.defenders < formation.defenders){
-                teamAfterFormationChange.map(p=> {
-                    if(!p.selected && p.position==="DEF"){
-                        p.availability="player-available";
-                    }
-                })
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="DEF"){
-                        p.validity="player-valid";
-                    }
-                })
-            }
-
-            if(state.defenders === formation.defenders){
-                teamAfterFormationChange.map(p=> {
-                    if(!p.selected && p.position==="DEF"){
-                        p.availability="player-unavailable";
-                    }
-                })
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="DEF"){
-                        p.validity="player-valid";
-                    }
-                })
-            }
-
-            //MIDFIELDERS
-            if(state.midfielders > formation.midfielders){
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="MID"){
-                        p.validity="player-invalid";
-                    }
-                })
-            }
-
-            if(state.midfielders < formation.midfielders){
-                teamAfterFormationChange.map(p=> {
-                    if(!p.selected && p.position==="MID"){
-                        p.availability="player-available";
-                    }
-                })
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="MID"){
-                        p.validity="player-valid";
-                    }
-                })
-            }
-
-            if(state.midfielders === formation.midfielders){
-                teamAfterFormationChange.map(p=> {
-                    if(!p.selected && p.position==="MID"){
-                        p.availability="player-unavailable";
-                    }
-                })
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="MID"){
-                        p.validity="player-valid";
-                    }
-                })
-            }
-
-            if(state.forwards > formation.forwards){
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="FWD"){
-                        p.validity="player-invalid";
-                    }
-                })
-            }
-
-            //FORWARDS
-            if(state.forwards < formation.forwards){
-                teamAfterFormationChange.map(p=> {
-                    if(!p.selected && p.position==="FWD"){
-                        p.availability="player-available";
-                    }
-                })
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="FWD"){
-                        p.validity="player-valid";
-                    }
-                })
-            }
-
-            if(state.forwards === formation.forwards){
-                teamAfterFormationChange.map(p=> {
-                    if(!p.selected && p.position==="FWD"){
-                        p.availability="player-unavailable";
-                    }
-                })
-                teamAfterFormationChange.map(p=> {
-                    if(p.selected && p.position==="FWD"){
-                        p.validity="player-valid";
-                    }
-                })
-            }
-
+            //Set validity
+            var newState= setValidity(state, formation);
+            var finalState = setAvailability(newState, formation);
+            
             return {...state, 
-                squadPlayers: teamAfterFormationChange, 
+                squadPlayers: finalState.squadPlayers,
                 selectedFormation: formation};
-        case LOAD_SQUAD:
-            console.log("loading squad");
+        case CAN_LOAD:
+            var savedSquad = JSON.parse(localStorage.getItem("Squad"));
+            var sqvedFormation = JSON.parse(localStorage.getItem("Formation"));
+            var canLoad= savedSquad!==null && sqvedFormation !==null;
+
             return {...state,
-            squadPlayers:action.payload.data};
+            canLoadSquad:canLoad}
+        case SQUAD_SAVED:
+            return {...state,
+            canLoadSquad:true}
+            
+        case LOAD_SQUAD:
+            const newSquad = action.payload.data;
+            const goalkeepers = newSquad.filter(p=>p.position==="GK" && p.selected).length;
+            const defenders = newSquad.filter(p=>p.position==="DEF" && p.selected).length;
+            const midfielders = newSquad.filter(p=>p.position==="MID" && p.selected).length;
+            const forwards = newSquad.filter(p=>p.position==="FWD" && p.selected).length;
+            return {...state,
+                squadPlayers:action.payload.data,
+                goalkeepers:goalkeepers,
+                defenders: defenders,
+                midfielders: midfielders,
+                forwards: forwards};
+        case LOAD_FORMATION:
+            console.log("applying formation: " + action.payload.data);
+            return {...state,
+            selectedFormation:action.payload.data}
+
         default:
             return state;
     };
@@ -311,4 +232,170 @@ const FindPlayerById=(id)=>{
             .concat(SquadList.players.forwards);
     let player= allPlayers.find(player=>player.id===id);
     return player;
+}
+
+const setValidity = (state, formation) => {    
+    const teamAfterStateChange = [...state.squadPlayers];
+
+    //DEFENDERS
+    if(state.defenders > formation.defenders){
+        console.log("too many defenders")
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="DEF"){
+                p.validity="player-invalid";
+            }
+        })
+    }
+
+    if(state.defenders < formation.defenders){
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="DEF"){
+                p.validity="player-valid";
+            }
+        })
+    }
+
+    if(state.defenders === formation.defenders){        
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="DEF"){
+                p.validity="player-valid";
+            }
+        })
+    }
+
+    //MIDFIELDERS
+    if(state.midfielders > formation.midfielders){
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="MID"){
+                p.validity="player-invalid";
+            }
+        })
+    }
+
+    if(state.midfielders < formation.midfielders){        
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="MID"){
+                p.validity="player-valid";
+            }
+        })
+    }
+
+    if(state.midfielders === formation.midfielders){
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="MID"){
+                p.validity="player-valid";
+            }
+        })
+    }
+
+    if(state.forwards > formation.forwards){
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="FWD"){
+                p.validity="player-invalid";
+            }
+        })
+    }
+
+    //FORWARDS
+    if(state.forwards < formation.forwards){        
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="FWD"){
+                p.validity="player-valid";
+            }
+        })
+    }
+
+    if(state.forwards === formation.forwards){        
+        teamAfterStateChange.map(p=> {
+            if(p.selected && p.position==="FWD"){
+                p.validity="player-valid";
+            }
+        })
+    }
+
+    return {...state, 
+        squadPlayers: teamAfterStateChange};
+
+}
+
+const setAvailability = (state, formation) => {
+    const teamAfterStateChange = [...state.squadPlayers];
+     //DEFENDERS
+     if(state.defenders > formation.defenders){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="DEF"){
+                p.availability="player-unavailable";
+            }
+        })
+     }
+
+    if(state.defenders < formation.defenders){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="DEF"){
+                p.availability="player-available";
+            }
+        })
+    }
+
+    if(state.defenders === formation.defenders){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="DEF"){
+                p.availability="player-unavailable";
+            }
+        })
+    }
+
+    //MIDFIELDERS
+
+    if(state.midfielders > formation.midfielders){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="MID"){
+                p.availability="player-unavailable";
+            }
+        })
+     }
+
+    if(state.midfielders < formation.midfielders){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="MID"){
+                p.availability="player-available";
+            }
+        })
+    }
+
+    if(state.midfielders === formation.midfielders){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="MID"){
+                p.availability="player-unavailable";
+            }
+        })
+    }
+
+    //FORWARDS
+    if(state.forwards > formation.forwards){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="FWD"){
+                p.availability="player-unavailable";
+            }
+        })
+     }
+
+    if(state.forwards < formation.forwards){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="FWD"){
+                p.availability="player-available";
+            }
+        })
+    }
+
+    if(state.forwards === formation.forwards){
+        teamAfterStateChange.map(p=> {
+            if(!p.selected && p.position==="FWD"){
+                p.availability="player-unavailable";
+            }
+        })
+    }
+
+    return {...state, 
+        squadPlayers: teamAfterStateChange};
 }

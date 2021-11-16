@@ -11,9 +11,9 @@ class FormationPicker extends React.Component{
         }, this);
     
         return (
-            <div>
+            <div class="formation-picker">
                 <h2>Select Formation</h2>
-                <select onChange={this.handleFormationChanged} defaultValue="1">
+                <select onChange={this.handleFormationChanged} value={this.props.selectedFormation.id}>
                     {formationsList}
                 </select>
             </div>
@@ -26,7 +26,6 @@ class FormationPicker extends React.Component{
     }
 
     getFormation=()=>{
-        console.log("GetFormation:" + this.state.SelectedFormation);
         return this.state.SelectedFormation;
     }
 
@@ -42,7 +41,8 @@ function mapDispatchToProps(dispatch){
 
 const mapStateToProps = state =>{
     return {
-    formations:state.formations
+    formations:state.formations,
+    selectedFormation:state.selectedFormation
     }
 };
 

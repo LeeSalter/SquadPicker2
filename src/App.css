@@ -16,10 +16,33 @@ div.player-invalid{
   flex-wrap: wrap;
 }
 
-.column{
-  flex:25%;
-  padding: 20px;
+.left-column, .right-column{
+  width:25%;
+  margin-left:10px;
+  text-align: center;
+} 
+
+.right-column{
+  margin-right: 10px;
 }
+
+.column + .column{
+  margin-left:2%;
+}
+
+.center-column{
+  flex-grow:1;
+}
+
+.formation-picker{
+  margin-top:100px;
+}
+
+.buttons{
+  text-align: center !important;
+  margin:auto auto;
+}
+
 
 @media screen and (max-width: 600px) {
   .row {
@@ -33,7 +56,7 @@ div.player-invalid{
   height: 380px;
   position: relative;
   margin: 0 auto;
-  top: calc(50% - 380px/2);
+  top: 50px;
   overflow: hidden;
 }
 
@@ -96,14 +119,14 @@ div.player-invalid{
   border: 4px solid white;
 }
 .box-d.left {
-  left: 5%;
+  left: 6%;
   border-left: none;
   border-bottom-right-radius: 1000px;
   border-top-right-radius: 1000px;
   clip-path: inset(0 0 0 70%);
 }
 .box-d.right {
-  right: 5%;
+  right: 6%;
   border-right: none;
   border-bottom-left-radius: 1000px;
   border-top-left-radius: 1000px;

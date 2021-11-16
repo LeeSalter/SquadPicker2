@@ -6,16 +6,20 @@ import FormationPicker from './components/formationPicker'
 
 function App() {
   return (
-    <div className="container">  
-  <h1>World's Best XI</h1>  
-  <div className="row">
-    <Team className="column"/>
-    <div className="column">
-      <Pitch/>
-      <FormationPicker />
-    </div>
-    <Squad className="column"/>
-    </div>
+    <div className="container App">  
+      <h1>World's Best XI</h1>  
+      <div className="row">
+        <div class="column left-column">
+          <Team />
+        </div>
+        <div className="center-column">
+          <Pitch/>
+          <FormationPicker />
+        </div>
+        <div className="column right-column">
+          <Squad />
+        </div>
+      </div>
     </div>
     
   );

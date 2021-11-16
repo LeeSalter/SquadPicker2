@@ -15,7 +15,8 @@ class Squad extends React.Component {
                                                                         key={p.id} 
                                                                         selected={p.selected} 
                                                                         availability={p.availability}
-                                                                        validity={p.validity}>                                                                            
+                                                                        validity={p.validity}
+                                                                        thumbnail={p.thumb}>                                                                            
                                                                     </Player>}, this);
         return (
             <div>
