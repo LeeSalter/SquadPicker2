@@ -10,6 +10,10 @@ import { containerClasses } from '@mui/material';
 
 class Team extends React.Component{
     
+    componentDidMount(){
+        this.setState(this.props.canLoad());
+    }
+
     render(){
         const {squadPlayers} = this.props;
         const selectedPlayers=squadPlayers.filter(p=>p.selected);

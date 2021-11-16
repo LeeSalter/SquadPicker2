@@ -16,7 +16,7 @@ export default function reducer (state, action){
             squadPlayers: allPlayers,
             formations: Formations,
             selectedFormation:{id:1, goalkeepers:1, defenders:4, midfielders:4, forwards:2},
-            canLoadSquad:false,
+            canLoadSquad:true,
             goalkeepers:0,
             defenders:0,
             midfielders:0,
@@ -202,7 +202,7 @@ export default function reducer (state, action){
         case SQUAD_SAVED:
             return {...state,
             canLoadSquad:true}
-            
+
         case LOAD_SQUAD:
             const newSquad = action.payload.data;
             const goalkeepers = newSquad.filter(p=>p.position==="GK" && p.selected).length;

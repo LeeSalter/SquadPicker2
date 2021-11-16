@@ -43,6 +43,84 @@ div.player-invalid{
   margin:auto auto;
 }
 
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  display: inline-block;
+  z-index: 0 !important;
+}
+
+.hidden{
+  display: none;
+}
+
+.goalkeeper{
+  position: absolute;
+  top:316px;
+  left:510px;
+}
+
+.four-four-two-left-back{
+  position: absolute;
+  top:183px;
+  left:621px;
+}
+
+.four-four-two-right-back{
+  position: absolute;
+  top:450px;
+  left:621px;
+}
+
+.four-four-two-right-center-back{
+  position: absolute;
+  top:364px;
+  left:621px;
+}
+
+.four-four-two-left-center-back{
+  position: absolute;
+  top:264px;
+  left:621px;
+}
+
+.four-four-two-left-winger{
+  position: absolute;
+  top:183px;
+  left:721px;
+}
+
+.four-four-two-right-winger{
+  position: absolute;
+  top:450px;
+  left:721px;
+}
+
+.four-four-two-right-center-mid{
+  position: absolute;
+  top:364px;
+  left:721px;
+}
+
+.four-four-two-left-center-mid{
+  position: absolute;
+  top:264px;
+  left:721px;
+}
+
+.four-four-two-right-center-fwd{
+  position: absolute;
+  top:342px;
+  left:786px;
+}
+
+.four-four-two-left-center-fwd{
+  position: absolute;
+  top:282px;
+  left:786px;
+}
 
 @media screen and (max-width: 600px) {
   .row {
