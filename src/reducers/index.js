@@ -1,25 +1,20 @@
 import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD, SQUAD_SAVED, CAN_LOAD, loadSquad } from "../actions/team";
 import { CHANGE_FORMATION, LOAD_FORMATION } from "../actions/formation";
 import { API_BASE } from "../constants/constants";
-import SquadList from "../data/players";
-import Formations from "../data/formations";
 import $ from 'jquery';
 
 export default function reducer (state, action){
     
-    const allPlayers=loadSquadFromDb();
     if(typeof state === 'undefined'){
         //Initialze state here.        
-        /* const allPlayers= SquadList.players.goalkeepers.concat(SquadList.players.defenders)
-        .concat(SquadList.players.midfielders)
-        .concat(SquadList.players.forwards); */
         const allPlayers=loadSquadFromDb();
-
+        const formations=loadFormationsFromDb();
+        const selectedFormaiton = formations[0];
         console.log("All players = " + allPlayers);
         state={
             squadPlayers: allPlayers,
-            formations: Formations,
-            selectedFormation:{id:1, goalkeepers:1, defenders:4, midfielders:4, forwards:2},
+            formations: formations,
+            selectedFormation:selectedFormaiton,
             canLoadSquad:true,
             goalkeepers:0,
             defenders:0,
@@ -397,4 +392,14 @@ const loadSquadFromDb = () => {
     }).responseText;
     players = JSON.parse(data);
     return players;
+}
+
+const loadFormationsFromDb = () => {
+    var formations=[];
+    var data = $.ajax({
+        url: API_BASE + "/api/formation",
+        async:false
+    }).responseText;
+    formations=JSON.parse(data);
+    return formations;
 }

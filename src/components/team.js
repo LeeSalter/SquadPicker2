@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { API_BASE } from '../constants/constants';
 import { loadSquad, canLoadSquad, squadSaved } from '../actions/team';
 import { loadFormation } from '../actions/formation';
 import Player from './player';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
+import $ from 'jquery';
 
 class Team extends React.Component{
     
@@ -24,8 +26,26 @@ class Team extends React.Component{
         const userId=this.props.userId;
 
         const saveState=()=>{
-            localStorage.setItem("Squad", JSON.stringify(squadPlayers));
-            localStorage.setItem("Formation", JSON.stringify(this.props.selectedFormation))
+            var selectedPlayersIds = selectedPlayers.map(p=> {return p.id});
+            var formationId=this.props.selectedFormation.id;
+            var postBody={
+                userId:userId,
+                formationId:formationId,
+                playerIds:selectedPlayersIds
+            }
+            var token = JSON.parse(localStorage.getItem('token')).token;
+
+            console.log("Token: " + token);
+
+            $.ajax({
+                url: API_BASE + "/api/squad/saveTeam",
+                async:false,
+                method: "POST",
+                contentType:"application/json",
+                dataType:"json",
+                data: JSON.stringify(postBody),
+                headers: {"Authorization": 'Bearer ' + token }
+            });
             this.props.squadSaved();
         }
 
