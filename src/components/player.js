@@ -5,6 +5,7 @@ import { Avatar } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
+import logo from '../assets/england-logo.png'
 
 class Player extends React.Component{
 
@@ -15,7 +16,7 @@ class Player extends React.Component{
     const availability=this.props.availability;
     const validity=this.props.validity;
     const selected=this.props.selected;   
-    const thumbnail=this.props.thumbnail;  
+    const thumbnail=logo; 
 
     const handleListItemClick = (event) => {
         if(selected){
@@ -26,12 +27,27 @@ class Player extends React.Component{
         };
     }
 
+    const positionToString= (pos) => {
+        switch(pos){
+            case 1:
+                return "GK";
+            case 2:
+                return "DEF";
+            case 3: 
+                return "MID";
+            case 4:
+                return "FWD";
+            default:
+                return "";
+            }
+    }
+
     return (
         <ListItemButton className={[availability,validity].join(" ")} data-player-id={id} selected={selected} onClick={(event)=> handleListItemClick(event)}>
             <ListItemAvatar>
                 <Avatar alt="squad player" src={thumbnail}/>
             </ListItemAvatar>
-            <ListItemText  id={id}><span>{position}&nbsp;{name}</span></ListItemText>
+            <ListItemText  id={id}><span>{positionToString(position)}&nbsp;{name}</span></ListItemText>
         </ListItemButton>
     );  
     } 

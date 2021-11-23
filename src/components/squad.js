@@ -9,6 +9,8 @@ class Squad extends React.Component {
     render(){     
         const playerCount=this.props.squadPlayers.length;
         const availablePlayers=this.props.squadPlayers.filter(function (p){return !p.selected});
+
+        console.log(availablePlayers);
         const playerItems = availablePlayers.map((p, index)=>{return <Player position={p.position} 
                                                                         name={p.name}   
                                                                         id={p.id} 

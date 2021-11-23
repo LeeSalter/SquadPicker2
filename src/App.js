@@ -1,27 +1,26 @@
 import './App.css';
-import Pitch from './components/pitch';
-import Squad from './components/squad';
-import Team from './components/team';
-import FormationPicker from './components/formationPicker'
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import useToken from './data/token';
+import SquadPicker from './components/squadpicker';
+import Login from './components/login';
 
 function App() {
+
+  const {token, setToken, getUsername, getExpiry, getUserId} = useToken();
+
+  if(!token) {
+    return <Login setToken={setToken} />
+  }
+
+  if(getExpiry() < Date.now()){
+    return <Login setToken={setToken} />
+  }
+
   return (
-    <div className="container App">  
-      <h1>World's Best XI</h1>  
-      <div className="row">
-        <div class="column left-column">
-          <Team />
-        </div>
-        <div className="center-column">
-          <Pitch/>
-          <FormationPicker />
-        </div>
-        <div className="column right-column">
-          <Squad />
-        </div>
-      </div>
-    </div>
     
+    <div className="wrapper">      
+      <SquadPicker username={getUsername()} userId={getUserId()} />
+    </div>
   );
 }
 

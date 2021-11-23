@@ -1,17 +1,21 @@
-import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD, SQUAD_SAVED, CAN_LOAD } from "../actions/team";
+import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD, SQUAD_SAVED, CAN_LOAD, loadSquad } from "../actions/team";
 import { CHANGE_FORMATION, LOAD_FORMATION } from "../actions/formation";
+import { API_BASE } from "../constants/constants";
 import SquadList from "../data/players";
 import Formations from "../data/formations";
-
+import $ from 'jquery';
 
 export default function reducer (state, action){
     
-
+    const allPlayers=loadSquadFromDb();
     if(typeof state === 'undefined'){
         //Initialze state here.        
-        const allPlayers= SquadList.players.goalkeepers.concat(SquadList.players.defenders)
+        /* const allPlayers= SquadList.players.goalkeepers.concat(SquadList.players.defenders)
         .concat(SquadList.players.midfielders)
-        .concat(SquadList.players.forwards);
+        .concat(SquadList.players.forwards); */
+        const allPlayers=loadSquadFromDb();
+
+        console.log("All players = " + allPlayers);
         state={
             squadPlayers: allPlayers,
             formations: Formations,
@@ -22,11 +26,11 @@ export default function reducer (state, action){
             midfielders:0,
             forwards:0
         }
-    }
+    }    
 
     switch (action.type){
         case ADD_PLAYER:
-            let playerToAdd = FindPlayerById(action.payload.id);
+            let playerToAdd = state.squadPlayers.find(player=>player.id===action.payload.id);
             if(playerToAdd===null){
                 return;
             }            
@@ -34,41 +38,41 @@ export default function reducer (state, action){
             updatedSquad[action.payload.id-1].selected=true;
             
             switch(playerToAdd.position){
-                case "GK":
+                case 1:
                     state.goalkeepers++;
                     if(state.goalkeepers===state.selectedFormation.goalkeepers){
                         updatedSquad.map(p=> {
-                            if(!p.selected && p.position==="GK"){
+                            if(!p.selected && p.position===1){
                                 p.availability="player-unavailable";
                             }
                         })
                     };
                     break;
-                case "DEF":
+                case 2:
                 state.defenders++;
                 if(state.defenders===state.selectedFormation.defenders){
                     updatedSquad.map(p=> {
-                        if(!p.selected && p.position==="DEF"){
+                        if(!p.selected && p.position===2){
                             p.availability="player-unavailable";
                         }
                     })
                 };
                 break;
-            case "MID":
-            state.midfielders++;
-            if(state.midfielders===state.selectedFormation.midfielders){
-                updatedSquad.map(p=> {
-                    if(!p.selected && p.position==="MID"){
-                        p.availability="player-unavailable";
-                    }
-                })
-            };
-            break;
-            case "FWD":
+            case 3:
+                state.midfielders++;
+                if(state.midfielders===state.selectedFormation.midfielders){
+                    updatedSquad.map(p=> {
+                        if(!p.selected && p.position===3){
+                            p.availability="player-unavailable";
+                        }
+                    })
+                };
+                break;
+            case 4:
             state.forwards++;
             if(state.forwards===state.selectedFormation.forwards){
                 updatedSquad.map(p=> {
-                    if(!p.selected && p.position==="FWD"){
+                    if(!p.selected && p.position===4){
                         p.availability="player-unavailable";
                     }
                 })
@@ -84,7 +88,7 @@ export default function reducer (state, action){
             }
             
         case REMOVE_PLAYER:
-            let playerToRemove = FindPlayerById(action.payload.id);
+            let playerToRemove =  state.squadPlayers.find(player=>player.id===action.payload.id);
             if(playerToRemove===null){
                 return;
             }            
@@ -92,11 +96,11 @@ export default function reducer (state, action){
             updatedTeam[action.payload.id-1].selected=false;
             
             switch(playerToRemove.position){
-                case "GK":
+                case 1:
                     state.goalkeepers--
                     if(state.goalkeepers<state.selectedFormation.goalkeepers){
                         updatedTeam.map(p=> {
-                            if(!p.selected && p.position==="GK"){
+                            if(!p.selected && p.position===1){
                                 p.availability="player-available";
                             }
                         })
@@ -104,18 +108,18 @@ export default function reducer (state, action){
 
                     if(state.goalkeepers===state.selectedFormation.goalkeepers){
                         updatedTeam.map(p=> {
-                            if(p.position==="GK"){
+                            if(p.position===1){
                                 p.validity="player-valid";
                             }
                         })
                         updatedTeam[action.payload.id-1].availability="player-unavailable";
                     };
                     break;
-                case "DEF":
+                case 2:
                 state.defenders--
                 if(state.defenders<state.selectedFormation.defenders){
                     updatedTeam.map(p=> {
-                        if(!p.selected && p.position==="DEF"){
+                        if(!p.selected && p.position===2){
                             p.availability="player-available";
                         }
                     })                    
@@ -123,18 +127,18 @@ export default function reducer (state, action){
 
                 if(state.defenders===state.selectedFormation.defenders){
                     updatedTeam.map(p=> {
-                        if(p.position==="DEF"){
+                        if(p.position===2){
                             p.validity="player-valid";
                         }
                         updatedTeam[action.payload.id-1].availability="player-unavailable";
                     })                    
                 };
                 break;
-            case "MID":
+            case 3:
                 state.midfielders--
                 if(state.midfielders<state.selectedFormation.midfielders){
                     updatedTeam.map(p=> {
-                        if(!p.selected && p.position==="MID"){
+                        if(!p.selected && p.position===3){
                             p.availability="player-available";
                         }
                     })
@@ -142,18 +146,18 @@ export default function reducer (state, action){
 
                 if(state.midfielders===state.selectedFormation.midfielders){
                     updatedTeam.map(p=> {
-                        if(p.position==="MID"){
+                        if(p.position===3){
                             p.validity="player-valid";
                         }
                     })
                     updatedTeam[action.payload.id-1].availability="player-unavailable";
                 };
             break;
-            case "FWD":
+            case 4:
                 state.forwards--
                 if(state.forwards<state.selectedFormation.forwards){
                     updatedTeam.map(p=> {
-                        if(!p.selected && p.position==="FWD"){
+                        if(!p.selected && p.position===4){
                             p.availability="player-available";
                         }
                     })
@@ -161,7 +165,7 @@ export default function reducer (state, action){
 
                 if(state.forwards===state.selectedFormation.forwards){
                     updatedTeam.map(p=> {
-                        if(p.position==="FWD"){
+                        if(p.position===4){
                             p.validity="player-valid";
                         }
                     })
@@ -220,21 +224,13 @@ export default function reducer (state, action){
     };
 }
 
-const FindPlayerById=(id)=>{
-    const allPlayers= SquadList.players.goalkeepers.concat(SquadList.players.defenders)
-            .concat(SquadList.players.midfielders)
-            .concat(SquadList.players.forwards);
-    let player= allPlayers.find(player=>player.id===id);
-    return player;
-}
-
 const setValidity = (state, formation) => {    
     const teamAfterStateChange = [...state.squadPlayers];
 
     //DEFENDERS
     if(state.defenders > formation.defenders){
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="DEF"){
+            if(p.selected && p.position===2){
                 p.validity="player-invalid";
             }
         })
@@ -242,7 +238,7 @@ const setValidity = (state, formation) => {
 
     if(state.defenders < formation.defenders){
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="DEF"){
+            if(p.selected && p.position===2){
                 p.validity="player-valid";
             }
         })
@@ -250,7 +246,7 @@ const setValidity = (state, formation) => {
 
     if(state.defenders === formation.defenders){        
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="DEF"){
+            if(p.selected && p.position===2){
                 p.validity="player-valid";
             }
         })
@@ -259,7 +255,7 @@ const setValidity = (state, formation) => {
     //MIDFIELDERS
     if(state.midfielders > formation.midfielders){
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="MID"){
+            if(p.selected && p.position===3){
                 p.validity="player-invalid";
             }
         })
@@ -267,7 +263,7 @@ const setValidity = (state, formation) => {
 
     if(state.midfielders < formation.midfielders){        
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="MID"){
+            if(p.selected && p.position===3){
                 p.validity="player-valid";
             }
         })
@@ -275,7 +271,7 @@ const setValidity = (state, formation) => {
 
     if(state.midfielders === formation.midfielders){
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="MID"){
+            if(p.selected && p.position===3){
                 p.validity="player-valid";
             }
         })
@@ -283,7 +279,7 @@ const setValidity = (state, formation) => {
 
     if(state.forwards > formation.forwards){
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="FWD"){
+            if(p.selected && p.position===4){
                 p.validity="player-invalid";
             }
         })
@@ -292,7 +288,7 @@ const setValidity = (state, formation) => {
     //FORWARDS
     if(state.forwards < formation.forwards){        
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="FWD"){
+            if(p.selected && p.position===4){
                 p.validity="player-valid";
             }
         })
@@ -300,7 +296,7 @@ const setValidity = (state, formation) => {
 
     if(state.forwards === formation.forwards){        
         teamAfterStateChange.map(p=> {
-            if(p.selected && p.position==="FWD"){
+            if(p.selected && p.position===4){
                 p.validity="player-valid";
             }
         })
@@ -316,7 +312,7 @@ const setAvailability = (state, formation) => {
      //DEFENDERS
      if(state.defenders > formation.defenders){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="DEF"){
+            if(!p.selected && p.position===2){
                 p.availability="player-unavailable";
             }
         })
@@ -324,7 +320,7 @@ const setAvailability = (state, formation) => {
 
     if(state.defenders < formation.defenders){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="DEF"){
+            if(!p.selected && p.position===2){
                 p.availability="player-available";
             }
         })
@@ -332,7 +328,7 @@ const setAvailability = (state, formation) => {
 
     if(state.defenders === formation.defenders){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="DEF"){
+            if(!p.selected && p.position===2){
                 p.availability="player-unavailable";
             }
         })
@@ -342,7 +338,7 @@ const setAvailability = (state, formation) => {
 
     if(state.midfielders > formation.midfielders){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="MID"){
+            if(!p.selected && p.position===3){
                 p.availability="player-unavailable";
             }
         })
@@ -350,7 +346,7 @@ const setAvailability = (state, formation) => {
 
     if(state.midfielders < formation.midfielders){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="MID"){
+            if(!p.selected && p.position===3){
                 p.availability="player-available";
             }
         })
@@ -358,7 +354,7 @@ const setAvailability = (state, formation) => {
 
     if(state.midfielders === formation.midfielders){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="MID"){
+            if(!p.selected && p.position===3){
                 p.availability="player-unavailable";
             }
         })
@@ -367,7 +363,7 @@ const setAvailability = (state, formation) => {
     //FORWARDS
     if(state.forwards > formation.forwards){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="FWD"){
+            if(!p.selected && p.position===4){
                 p.availability="player-unavailable";
             }
         })
@@ -375,7 +371,7 @@ const setAvailability = (state, formation) => {
 
     if(state.forwards < formation.forwards){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="FWD"){
+            if(!p.selected && p.position===4){
                 p.availability="player-available";
             }
         })
@@ -383,7 +379,7 @@ const setAvailability = (state, formation) => {
 
     if(state.forwards === formation.forwards){
         teamAfterStateChange.map(p=> {
-            if(!p.selected && p.position==="FWD"){
+            if(!p.selected && p.position===4){
                 p.availability="player-unavailable";
             }
         })
@@ -391,4 +387,14 @@ const setAvailability = (state, formation) => {
 
     return {...state, 
         squadPlayers: teamAfterStateChange};
+}
+
+const loadSquadFromDb = () => {    
+    var players=[];
+    var data = $.ajax({
+        url: API_BASE + "/api/squad",
+        async:false
+    }).responseText;
+    players = JSON.parse(data);
+    return players;
 }

@@ -21,6 +21,7 @@ class Team extends React.Component{
                 {return <Player position={p.position} name={p.name} id={p.id} key={p.id} thumbnail={p.thumb} selected={p.selected} validity={p.validity} availability={p.availability}></Player>}, this).sort(function(a,b){return a.id - b.id});
         const teamIsValid = squadPlayers.filter(p=>p.selected && p.validity==="player-valid").length===11;
         const canLoadSquad=this.props.canLoadSquad;
+        const userId=this.props.userId;
 
         const saveState=()=>{
             localStorage.setItem("Squad", JSON.stringify(squadPlayers));
@@ -79,4 +80,3 @@ function mapDispatchToProps(dispatch){
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Team);
-
