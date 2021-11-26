@@ -1,31 +1,30 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { addPlayer, removePlayer } from '../actions/team';
+import {SquadContext} from '../contexts/squad';
 import { Avatar } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import logo from '../assets/england-logo.png'
 
-class Player extends React.Component{
+const Player=(props)=>{
+    const[state,dispatch] = React.useContext(SquadContext);
 
-    render(){
-    const position= this.props.position;
-    const name=this.props.name;
-    const id=this.props.id;  
-    const availability=this.props.availability;
-    const validity=this.props.validity;
-    const selected=this.props.selected;   
+    const position= props.position;
+    const name=props.name;
+    const id=props.id;  
+    const availability=props.availability;
+    const validity=props.validity;
+    const selected=props.selected;   
     const thumbnail=logo; 
 
-    const handleListItemClick = (event) => {
+    const handleListItemClick = ((event) => {
         if(selected){
-            this.props.removePlayerFromTeam(id);         
+            dispatch({type:"DESELECT_PLAYER",payload:state.selectedPlayers.find(p=>p.id===id)})      
         }
         else{
-            this.props.addPlayerToTeam(id);
+            dispatch({type:"SELECT_PLAYER",payload:state.unselectedPlayers.find(p=>p.id===id)}) 
         };
-    }
+    })
 
     const positionToString= (pos) => {
         switch(pos){
@@ -50,19 +49,7 @@ class Player extends React.Component{
             <ListItemText  id={id}><span>{positionToString(position)}&nbsp;{name}</span></ListItemText>
         </ListItemButton>
     );  
-    } 
 
 }
 
-function mapDispatchToProps(dispatch){
-    return {
-        addPlayerToTeam: (id)=>{
-            dispatch(addPlayer(id))
-        },
-        removePlayerFromTeam: (id)=>{
-            dispatch(removePlayer(id))
-        }
-    }
-}
-
-export default connect(null,mapDispatchToProps)(Player)
+export default Player

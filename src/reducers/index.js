@@ -1,5 +1,5 @@
-import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD, SQUAD_SAVED, CAN_LOAD, loadSquad } from "../actions/team";
-import { CHANGE_FORMATION, LOAD_FORMATION } from "../actions/formation";
+import { ADD_PLAYER, REMOVE_PLAYER, LOAD_SQUAD, SQUAD_SAVED, CAN_LOAD, LOAD_TEAM,LOAD_TEAMS,CREATE_PLAYER, SQUAD_LOADED } from "../actions/team";
+import { CHANGE_FORMATION, LOAD_FORMATION, LOAD_FORMATIONS } from "../actions/formation";
 import { API_BASE } from "../constants/constants";
 import $ from 'jquery';
 
@@ -7,21 +7,17 @@ export default function reducer (state, action){
     
     if(typeof state === 'undefined'){
         //Initialze state here.        
-        const allPlayers=loadSquadFromDb();
-        const formations=loadFormationsFromDb();
-        const selectedFormaiton = formations[0];
-        console.log("All players = " + allPlayers);
         state={
-            squadPlayers: allPlayers,
-            formations: formations,
-            selectedFormation:selectedFormaiton,
+            squadPlayers: [],
+            formations: [],
+            selectedFormation:null,
             canLoadSquad:true,
             goalkeepers:0,
             defenders:0,
             midfielders:0,
             forwards:0
         }
-    }    
+    }  
 
     switch (action.type){
         case ADD_PLAYER:
@@ -197,8 +193,7 @@ export default function reducer (state, action){
         case SQUAD_SAVED:
             return {...state,
             canLoadSquad:true}
-
-        case LOAD_SQUAD:
+        case LOAD_TEAM:
             const newSquad = action.payload.data;
             const goalkeepers = newSquad.filter(p=>p.position==="GK" && p.selected).length;
             const defenders = newSquad.filter(p=>p.position==="DEF" && p.selected).length;
@@ -212,10 +207,35 @@ export default function reducer (state, action){
                 forwards: forwards};
         case LOAD_FORMATION:
             return {...state,
-            selectedFormation:action.payload.data}
+            selectedFormation:action.payload.data}        
+        case CREATE_PLAYER:
+            const playerName=action.payload.name;
+            const position = action.payload.position;            
+            console.log(playerName);
+            console.log(position);
 
+            $.ajax({
+                url: API_BASE + "/api/squad/createplayer?name=" + playerName + "&position=" + position,
+                method: "POST",
+                contentType:"application/json",
+                dataType:"json",
+                headers: {"Authorization": 'Bearer  + token' },
+            'success' :function(data){
+                return {...state,
+                squadPlayers:[...state.squadPlayers, data]}
+            },
+            'error':function(error){
+                return{...state,
+                error:error}
+            }
+            });
+            break;
+        case SQUAD_LOADED:
+            return {...state,
+            squadPlayers: action.payload.data}
         default:
             return state;
+            
     };
 }
 

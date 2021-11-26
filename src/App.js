@@ -1,26 +1,41 @@
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import './App.css';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import useToken from './data/token';
+import Logo from './assets/england-logo.png';
+import Login from './components/authentication/login';
+import getCookieValue from './components/authentication/getCookieValue';
+import { SquadProvider } from './contexts/squad';
 import SquadPicker from './components/squadpicker';
-import Login from './components/login';
+import PrivateRoute from './components/privateRoute';
+import isAuthenticated from './components/authentication/isAuthenticated';
 
 function App() {
 
-  const {token, setToken, getUsername, getExpiry, getUserId} = useToken();
-
-  if(!token) {
-    return <Login setToken={setToken} />
-  }
-
-  if(getExpiry() < Date.now()){
-    return <Login setToken={setToken} />
-  }
-
   return (
-    
-    <div className="wrapper">      
-      <SquadPicker username={getUsername()} userId={getUserId()} />
-    </div>
+    <BrowserRouter>
+      <div id="wrapper">
+          <h1>England Team Selection Tool</h1>
+          <img className="logo" src={Logo} alt="England logo"/>
+      </div>
+      <Switch>
+        <Route exact path="/" render={()=>{
+          if(isAuthenticated()){
+            return(
+              <Redirect to="/squadpicker"/>
+            )
+          } else{ 
+            return(
+              <Redirect to="/login"/>
+            )
+          }                      
+        }}/>
+        <Route exact path="/login" component={Login}></Route>
+        <PrivateRoute path="/squadpicker">
+          <SquadProvider>
+            <SquadPicker username={getCookieValue("auth-name")}/>
+          </SquadProvider>
+        </PrivateRoute>
+      </Switch>
+      </BrowserRouter>
   );
 }
 
