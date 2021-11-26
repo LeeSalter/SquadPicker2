@@ -1,5 +1,6 @@
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import './App.css';
+import Navbar from './components/nav/navbar';
 import Logo from './assets/england-logo.png';
 import Login from './components/authentication/login';
 import getCookieValue from './components/authentication/getCookieValue';
@@ -7,15 +8,15 @@ import { SquadProvider } from './contexts/squad';
 import SquadPicker from './components/squadpicker';
 import PrivateRoute from './components/privateRoute';
 import isAuthenticated from './components/authentication/isAuthenticated';
+import CreatePlayer from './components/createPlayer';
 
 function App() {
 
   return (
     <BrowserRouter>
+    <Navbar/>    
       <div id="wrapper">
-          <h1>England Team Selection Tool</h1>
-          <img className="logo" src={Logo} alt="England logo"/>
-      </div>
+          <img className="logo" src={Logo} alt="England logo"/>    
       <Switch>
         <Route exact path="/" render={()=>{
           if(isAuthenticated()){
@@ -34,7 +35,13 @@ function App() {
             <SquadPicker username={getCookieValue("auth-name")}/>
           </SquadProvider>
         </PrivateRoute>
+        <PrivateRoute path="/players/create">
+          <SquadProvider>
+            <CreatePlayer />
+          </SquadProvider>
+        </PrivateRoute>
       </Switch>
+      </div>
       </BrowserRouter>
   );
 }

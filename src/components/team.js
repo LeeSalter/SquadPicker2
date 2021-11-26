@@ -8,11 +8,13 @@ import Player from './player';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
+import getCookieValue from './authentication/getCookieValue';
 import $ from 'jquery';
 
 const Team = ()=> {
     const[state,dispatch]=React.useContext(SquadContext);
 
+        const token=getCookieValue("auth-token");
         const selectedPlayers=state.selectedPlayers;
         const playerCount=selectedPlayers.length;
         const playerItems = selectedPlayers.map((p, index)=>
@@ -21,17 +23,14 @@ const Team = ()=> {
 
         const saveState=()=>{
             var selectedPlayersIds = selectedPlayers.map(p=> {return p.id});
-            var formationId=this.props.selectedFormation.id;
+            var formationId=state.selectedFormation.id;
             var postBody={
                 formationId:formationId,
                 playerIds:selectedPlayersIds
             }
-            var token = JSON.parse(localStorage.getItem('token')).token;
-
-            console.log("Token: " + token);
 
             $.ajax({
-                url: API_BASE + "/api/squad/saveTeam",
+                url: API_BASE + "/api/team/saveTeam",
                 async:false,
                 method: "POST",
                 contentType:"application/json",

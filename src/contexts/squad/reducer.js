@@ -1,3 +1,4 @@
+import $ from 'jquery';
 export const reducer = (state, action) => {
     switch(action.type){
         case "SELECT_PLAYER":
@@ -114,8 +115,32 @@ export const reducer = (state, action) => {
             formations: action.payload,
             selectedFormation: action.payload[0]}
         case "FORMATION_CHANGED":
+            var formationName=action.payload.name;
+            switch(formationName) {
+                case "4-4-2":
+                    $("span[data-formation=4-4-2]").removeClass("hidden");
+                    $("span[data-formation=4-3-3]").addClass("hidden");
+                    $("span[data-formation=5-3-2]").addClass("hidden");
+                    break;
+                case "5-3-2":
+                    $("span[data-formation=4-4-2]").addClass("hidden");
+                    $("span[data-formation=4-3-3]").addClass("hidden");
+                    $("span[data-formation=5-3-2]").removeClass("hidden");
+                    break;
+                case "4-3-3":
+                    $("span[data-formation=4-4-2]").addClass("hidden");
+                    $("span[data-formation=4-3-3]").removeClass("hidden");
+                    $("span[data-formation=5-3-2]").addClass("hidden");
+                    break;
+                default:
+                    break;
+            }
+            
             return{...state,
             selectedFormation:action.payload}
+        case "PLAYER_CREATED":
+            return{...state,
+            unselectedPlayers: [...state.unselectedPlayers,action.payload]}
         default:
             return state;
     }   
@@ -123,5 +148,7 @@ export const reducer = (state, action) => {
 
 export const initialState={
     selectedPlayers:[],
-    unselectedPlayers:[]
+    unselectedPlayers:[],
+    formations:[],
+    selectedFormation:""
 }

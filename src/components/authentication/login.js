@@ -16,8 +16,7 @@ export default function Login()
 
     const handleSubmit = async e => {
         e.preventDefault();
-        console.log("Logging in with: " + username + " " + password);
-        axios.post(API_BASE + "/api/Login/authenticate",{username,password})
+        axios.post(API_BASE + "/api/Login/authenticate",{username,password},{timeout:5000})
         .then(res=>{
             console.log("Response: " + res);
             let date=new Date();
@@ -38,7 +37,7 @@ export default function Login()
                 <h2 class="active"> Sign In </h2>                    
                 <form onSubmit={e=>handleSubmit(e)}>
                     <input type="text" id="login" class="fadeIn second" name="login" required placeholder="username" onChange={e=>setUsername(e.target.value)} />
-                    <input type="password" id="password" class="fadeIn third" name="login" required placeholder="password" onChange={e=>setPassword(e.target.value)} />
+                    <input type="password" id="password" class="fadeIn third" name="password" required placeholder="password" onChange={e=>setPassword(e.target.value)} />
                     <input type="submit" class="fadeIn fourth" value="Log In" />
                 </form>
             </div>

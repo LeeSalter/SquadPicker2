@@ -11,7 +11,8 @@ import { SquadContext } from '../contexts/squad';
 const SquadPicker = (props) =>{
     
     const token=getCookieValue("auth-token");
-    const headers = {headers: {"Authorization": 'Bearer  ' + token }};
+    const headers = {headers: {"Authorization": 'Bearer  ' + token,
+                                "Timeout": 2000 }};
     const [squadPlayers,setSquad] = useState([])
     const [formations,setFormations]=useState([]);
     const [state, dispatch]=React.useContext(SquadContext);
@@ -48,13 +49,13 @@ const SquadPicker = (props) =>{
                 <div id="squad-wrapper">
                         <div id="left-content">
                             <Team userId={props.userId}/>
+                            {formations && <FormationPicker formations={state.formations} selectedFormation={state.selectedFormation} /> }                           
                         </div>
                         <div id="center-content">
-                            <Pitch/>
-                            {formations && <FormationPicker formations={formations} selectedFormation={formations[0]} /> }                           
+                            <Pitch/>                            
                         </div>
                         <div id="right-content">
-                            {squadPlayers && <Squad squad={state.unselectedPlayers} /> }                           
+                            {squadPlayers && <Squad /> }                           
                         </div>
                 </div>
             </div>

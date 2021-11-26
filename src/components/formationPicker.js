@@ -1,7 +1,7 @@
 import React from 'react';
 import { SquadContext } from '../contexts/squad';
 
-const FormationPicker = (props)=> {
+const FormationPicker = ()=> {
 
     const[state,dispatch]  = React.useContext(SquadContext);
 
@@ -14,13 +14,15 @@ const FormationPicker = (props)=> {
     return(           
             <div class="formation-picker">
                 <h2>Select Formation</h2>
-                <select onChange={handleFormationChanged} value={props.selectedFormation}>
-                {props.formations.map((f,i) => {           
+                <div>
+                <select onChange={handleFormationChanged} defaultValue={state.selectedFormation}>
+                {state.formations.map((f,i) => {            
                     return (
                         <option key={i} value={f.id}>{f.name}</option>
                     )            
                     })}
                 </select>
+                </div>
             </div>
     )
     }

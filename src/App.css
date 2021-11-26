@@ -1,11 +1,144 @@
+body, .css-144ebsl{
+  background-color: #fafafa !important;
+  margin:auto auto;
+}
+
 .App {
   text-align: center;
 }
 
-div#wrapper{
-  width:100%;
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #243c5c;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+div#pitch{
+  position: relative;
+  max-width: 480px;
+  max-height:600px;
+  min-width: 480px;
+  min-height: 600px;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  background-image: url('./assets/FOOTBALL_FIELD.jpg');
+  background-size: 480px 600px;
   margin:auto auto;
-  text-align: center;
+}
+
+div#pitch span.GK{
+  position: absolute;
+  top:15px;
+  left:227px;
+}
+
+div#pitch span.LB{
+  position: absolute;
+  top:122px;
+  left:61px;
+}
+
+div#pitch span.LCB{
+  position: absolute;
+  top:122px;
+  left:161px;
+}
+
+div#pitch span.CB{
+  position: absolute;
+  top:122px;
+  left:227px;
+}
+
+div#pitch span.RCB{
+  position: absolute;
+  top:122px;
+  left:288px;
+}
+div#pitch span.RB{
+  position: absolute;
+  top:122px;
+  left:388px;
+}
+
+div#pitch span.LM{
+  position: absolute;
+  top:286px;
+  left:61px;
+}
+
+div#pitch span.LCM{
+  position: absolute;
+  top:286px;
+  left:161px;
+}
+
+div#pitch span.RCM{
+  position: absolute;
+  top:286px;
+  left:288px;
+}
+
+div#pitch span.RM{
+  position: absolute;
+  top:286px;
+  left:388px;
+}
+
+div#pitch span.IL{
+  position: absolute;
+  top:286px;
+  left:111px;
+}
+
+div#pitch span.CM{
+  position: absolute;
+  top:286px;
+  left:226px;
+}
+
+div#pitch span.IR{
+  position: absolute;
+  top:286px;
+  left:340px;
+}
+
+div#pitch span.CF1{
+  position: absolute;
+  top:416px;
+  left:271px;
+}
+
+div#pitch span.CF2{
+  position: absolute;
+  top:416px;
+  left:181px;
+}
+
+div#pitch span.LCF{
+  position: absolute;
+  top:416px;
+  left:141px;
+}
+
+div#pitch span.CF{
+  position: absolute;
+  top:416px;
+  left:226px;
+}
+
+div#pitch span.RCF{
+  position: absolute;
+  top:416px;
+  left:312px;
+}
+
+div#wrapper, div#create-player-wrapper{
+  width:100%;
+  margin:100px auto;
+  text-align: center;  
 }
 
 div.player-unavailable{
@@ -53,27 +186,15 @@ img.pitch{
   margin:auto auto;
 }
 
-.dot {
-  height: 25px;
-  width: 25px;
-  background-color: #ff0000;
-  border-radius: 50%;
-  display: inline-block;
-  z-index: 0 !important;
-}
-
 .hidden{
   display: none;
-}
-
-@media screen and (max-width: 600px) {
-  #center-content{
-    display:none;
-  }
 }
 
 @media screen and (max-width: 1024px){
   #center-content{
     display:none;
+  }
+  .formation-picker{
+    display:block;
   }
 }
