@@ -62,6 +62,9 @@ export default function App(props) {
           <Link to="/squadpicker">Select team</Link>
         </ListItem>
         <ListItem button key="home">
+          <Link to="/teams">My teams</Link>
+        </ListItem>
+        <ListItem button key="home">
           <Link to="/players/create">Create new player</Link>
         </ListItem>
       </List>

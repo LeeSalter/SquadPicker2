@@ -38,7 +38,7 @@ const Team = ()=> {
                 data: JSON.stringify(postBody),
                 headers: {"Authorization": 'Bearer ' + token }
             });
-            this.props.squadSaved();
+            dispatch({type:"TEAM_SAVED",payload:{selectedPlayers,formationId}})
         }
 
         return (
@@ -56,30 +56,4 @@ const Team = ()=> {
         )        
 }
 
-
-const mapStateToProps = state =>{
-    return {
-        squadPlayers: state.squadPlayers,
-        selectedFormation: state.selectedFormation,
-        canLoadSquad: state.canLoadSquad
-    }
-};
-
-function mapDispatchToProps(dispatch){
-    return {
-        loadTeam: (data)=>{
-            dispatch(loadTeam(data))
-        },
-        loadFormation: (data) =>{
-            dispatch(loadFormation(data))
-        },
-        squadSaved: () => {
-            dispatch(squadSaved())
-        },
-        canLoad: () => {
-            dispatch(canLoadSquad())
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Team);
+export default Team

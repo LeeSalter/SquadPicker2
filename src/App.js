@@ -9,6 +9,7 @@ import SquadPicker from './components/squadpicker';
 import PrivateRoute from './components/privateRoute';
 import isAuthenticated from './components/authentication/isAuthenticated';
 import CreatePlayer from './components/createPlayer';
+import TeamList from './components/teams/teamList';
 
 function App() {
 
@@ -38,6 +39,11 @@ function App() {
         <PrivateRoute path="/players/create">
           <SquadProvider>
             <CreatePlayer />
+          </SquadProvider>
+        </PrivateRoute>
+        <PrivateRoute path="/teams">
+          <SquadProvider>
+            <TeamList/>
           </SquadProvider>
         </PrivateRoute>
       </Switch>

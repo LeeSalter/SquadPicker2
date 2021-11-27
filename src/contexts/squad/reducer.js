@@ -106,9 +106,18 @@ export const reducer = (state, action) => {
                     selectedPlayers:myNewState.selectedPlayers,
                     unselectedPlayers:myNewState.unselectedPlayers
                 }
-        case "SQUAD_LOADED":{
+        case "INITIAL_SQUAD_LOADED":{
             return {...state,
-                unselectedPlayers: action.payload}
+                selectedPlayers: action.payload.filter(p=>p.selected),
+                unselectedPlayers: action.payload.filter(p=>!p.selected)}
+        }
+        case "SQUAD_LOADED":{    
+            //figure out how to fire the change event for the formation dropdown so that the pitch formation updates.   
+            //IDEA: create components for each formation containing the dots, then just load the appropriate one     
+            return {...state,
+                selectedPlayers: action.payload.players.filter(p=>p.selected),
+                unselectedPlayers: action.payload.players.filter(p=>!p.selected),
+                selectedFormation:action.payload.formation}
         }
         case "FORMATIONS_LOADED":
             return {...state,
@@ -141,6 +150,9 @@ export const reducer = (state, action) => {
         case "PLAYER_CREATED":
             return{...state,
             unselectedPlayers: [...state.unselectedPlayers,action.payload]}
+        case "TEAMS_LOADED":
+            return{...state,
+            savedTeams: action.payload}
         default:
             return state;
     }   
@@ -150,5 +162,6 @@ export const initialState={
     selectedPlayers:[],
     unselectedPlayers:[],
     formations:[],
-    selectedFormation:""
+    selectedFormation:"",
+    savedTeams:[]
 }

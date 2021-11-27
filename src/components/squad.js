@@ -7,13 +7,12 @@ import List from '@mui/material/List';
 const Squad = ()=> {
 
     const [state, dispatch]=React.useContext(SquadContext);
-    const availablePlayers=state.unselectedPlayers;
     return (   
             <div>
-                <h2>Players in squad : {availablePlayers.length}</h2>            
+                <h2>Players in squad : {state.unselectedPlayers.length}</h2>            
                 <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
                     <List component="nav">
-                    {availablePlayers.map((p, index)=>{
+                    {state.unselectedPlayers.map((p, index)=>{
                         
                         return <Player position={p.position} 
                                                                         name={p.name}   

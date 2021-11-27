@@ -15,7 +15,7 @@ const FormationPicker = ()=> {
             <div class="formation-picker">
                 <h2>Select Formation</h2>
                 <div>
-                <select onChange={handleFormationChanged} defaultValue={state.selectedFormation}>
+                <select id="formations" onChange={handleFormationChanged} defaultValue={state.selectedFormation.id}>
                 {state.formations.map((f,i) => {            
                     return (
                         <option key={i} value={f.id}>{f.name}</option>
