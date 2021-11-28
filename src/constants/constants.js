@@ -1,1 +1,1 @@
-export const API_BASE = "https://localhost:44372";
+export const API_BASE = "https://squad-picker-api.azurewebsites.net";

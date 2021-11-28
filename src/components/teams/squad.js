@@ -3,10 +3,16 @@ import { SquadContext } from '../../contexts/squad';
 import Player from '../players/player';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
+import NoSquadPlayers from '../typography/NoSquadPlayers';
 
 const Squad = ()=> {
 
     const [state, dispatch]=React.useContext(SquadContext);
+    if(state.unselectedPlayers.length===0){
+        return (
+            <NoSquadPlayers/>
+        )
+    }else{
     return (   
             <div>
                 <h2>Players in squad : {state.unselectedPlayers.length}</h2>            
@@ -28,6 +34,7 @@ const Squad = ()=> {
             </div>
             
         )
+    }
 }
 
 export default Squad

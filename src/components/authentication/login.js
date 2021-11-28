@@ -18,7 +18,7 @@ export default function Login()
 
     const handleSubmit = async e => {
         e.preventDefault();
-        axios.post(API_BASE + "/api/Login/authenticate",{username,password},{timeout:5000})
+        axios.post(API_BASE + "/api/Login/authenticate",{username,password})
         .then(res=>{
             console.log("Response: " + res);
             let date=new Date();

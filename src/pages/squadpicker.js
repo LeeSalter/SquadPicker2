@@ -7,6 +7,7 @@ import Squad from '../components/teams/squad';
 import Team from '../components/teams/team';
 import FormationPicker from '../components/formations/formationPicker'
 import { SquadContext } from '../contexts/squad';
+import NoSquadPlayers from '../components/typography/NoSquadPlayers';
 
 const SquadPicker = (props) =>{
     
@@ -20,14 +21,15 @@ const SquadPicker = (props) =>{
     const username=getCookieValue("auth-name");
 
     const loadSquad = () => {   
-        if(state.unselectedPlayers.length>0)     
+        if(state.unselectedPlayers.length>0)   {  
             return;
+        }
 
         axios.get(API_BASE + "/api/Squad",headers)
         .then(res=>{
             setSelectedPlayers(res.data.filter(p=>p.selected));
             setUnselectedPlayers(res.data.filter(p=>!p.selected));
-            dispatch({type:"INITIAL_SQUAD_LOADED",payload:res.data})
+            dispatch({type:"INITIAL_SQUAD_LOADED",payload:res.data})                            
         })
         .catch((error) =>{
             console.log(error);           
@@ -71,7 +73,7 @@ const SquadPicker = (props) =>{
                             <Pitch/>                            
                         </div>
                         <div id="right-content">
-                            <Squad />                          
+                            <Squad />
                         </div>
                 </div>
             </div>
