@@ -152,7 +152,11 @@ div.player-invalid{
 
 #squad-wrapper{
   display:flex;
-  justify-content: space-between;
+}
+
+#team-list-wrapper{
+  max-width: 75%;
+  margin:auto auto;
 }
 
 #center-content{

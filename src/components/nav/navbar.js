@@ -1,7 +1,7 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,6 +12,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import isAuthenticated from "../authentication/isAuthenticated";
+import LogoutButton from "../authentication/logoutButton";
 
 const drawerWidth = 240;
 
@@ -89,7 +91,8 @@ return (
           </IconButton>
           <Typography variant="h6" noWrap>
             England team selector
-          </Typography>
+          </Typography>  
+          <LogoutButton/>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>

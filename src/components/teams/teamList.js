@@ -54,6 +54,7 @@ const TeamList = () => {
     },[]);
 
     return (
+        <div id="team-list-wrapper">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
@@ -70,6 +71,7 @@ const TeamList = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        </div>
       );
 }
 export default TeamList;

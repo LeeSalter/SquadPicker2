@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {useHistory, useLocation} from 'react-router-dom';
-import { API_BASE } from '../constants/constants';
-import {SquadContext} from '../contexts/squad';
-import getCookieValue from '../components/authentication/getCookieValue';
-import '../components/authentication/login.css';
+import { API_BASE } from '../../constants/constants';
+import {SquadContext} from '../../contexts/squad';
+import getCookieValue from '../authentication/getCookieValue';
+import '../../components/authentication/login.css';
 
 const CreatePlayer = () =>{
 
@@ -14,7 +14,8 @@ const CreatePlayer = () =>{
 
     const [state, dispatch]=React.useContext(SquadContext);
     const [playername, setPlayerName] = useState("");
-    const [position, setPosition] = useState("");
+    const [position, setPosition] = useState("1");
+    const [message, setMessage]=useState("");
 
     let location = useLocation();
     let history = useHistory();
@@ -22,15 +23,17 @@ const CreatePlayer = () =>{
 
     const handleSubmit = async e => {
         e.preventDefault();
+        setMessage("");
         var data = {playername,position};
         console.log(data);
         axios.post(API_BASE + "/api/Squad/createplayer",{playername,position},headers)
         .then(res=>{
             dispatch({type:"PLAYER_CREATED",payload:res.data})
-            history.push("/squadpicker");
+            setMessage("Created " + playername);            
         })
         .catch((error) =>{
-            console.log(error);           
+            console.log(error);  
+            setMessage(error);
         })
     }
 
@@ -49,6 +52,7 @@ const CreatePlayer = () =>{
                     </select>
                     <input type="submit" class="fadeIn fourth" value="Create" />
                     <input type="button" class="fadeIn fourth" value="Cancel" onClick={()=>{window.location = "/squadpicker"}} />
+                    <div>{message}</div>
                 </form>
             </div>
         </div>

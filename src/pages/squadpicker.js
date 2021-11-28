@@ -1,13 +1,12 @@
 import React, {useEffect, useState } from 'react';
 import axios from 'axios';
-import getCookieValue from './authentication/getCookieValue';
+import getCookieValue from '../components/authentication/getCookieValue';
 import { API_BASE } from '../constants/constants';
-import Pitch from './pitch';
-import Squad from './squad';
-import Team from './team';
-import FormationPicker from './formationPicker'
+import Pitch from '../components/pitch/pitch';
+import Squad from '../components/teams/squad';
+import Team from '../components/teams/team';
+import FormationPicker from '../components/formations/formationPicker'
 import { SquadContext } from '../contexts/squad';
-import { KeyboardReturnOutlined } from '@material-ui/icons';
 
 const SquadPicker = (props) =>{
     
@@ -18,6 +17,7 @@ const SquadPicker = (props) =>{
     const [unselectedPlayers, setUnselectedPlayers] = useState([]);
     const [formations,setFormations]=useState([]);
     const [state, dispatch]=React.useContext(SquadContext);
+    const username=getCookieValue("auth-name");
 
     const loadSquad = () => {   
         if(state.unselectedPlayers.length>0)     
@@ -60,11 +60,11 @@ const SquadPicker = (props) =>{
     return(
             <div className="container App">  
                 <div className="heading">
-                    <h2>Welcome {props.username}</h2>
+                    <h2>Welcome {username}</h2>
                 </div>
                 <div id="squad-wrapper">
                         <div id="left-content">
-                            <Team userId={props.userId}/>
+                            <Team />
                             <FormationPicker />                          
                         </div>
                         <div id="center-content">

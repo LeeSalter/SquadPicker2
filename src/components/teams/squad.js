@@ -1,6 +1,6 @@
 import React from 'react';
-import { SquadContext } from '../contexts/squad';
-import Player from './player';
+import { SquadContext } from '../../contexts/squad';
+import Player from '../players/player';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 

@@ -3,22 +3,27 @@ import axios from 'axios';
 import { API_BASE } from '../../constants/constants';
 import {useHistory, useLocation} from 'react-router-dom';
 import './login.css';
-import {AuthenticatedContext} from '../../contexts/Login';
 
-export default function Login()
+export default function Register()
 {    
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loginMessage, setLoginMessage] = useState("");
-    const [state, dispatch]=React.useContext(AuthenticatedContext);
+    const [confirmpassword, setConfirmPassword] = useState("");
+    const [registerMessage, setRegisterMessage] = useState("");
     
     let location = useLocation();
     let history = useHistory();
-    let {from} = location.state || { from: { pathname: "/" } };
 
     const handleSubmit = async e => {
         e.preventDefault();
-        axios.post(API_BASE + "/api/Login/authenticate",{username,password},{timeout:5000})
+        if(password!=confirmpassword){
+            setRegisterMessage("Passwords do not match");
+            return;
+        }else{
+            setRegisterMessage("");
+        }
+
+        axios.post(API_BASE + "/api/register/register",{username,password},{timeout:5000})
         .then(res=>{
             console.log("Response: " + res);
             let date=new Date();
@@ -26,11 +31,10 @@ export default function Login()
             const expires = "expires=" + date.toUTCString();
             document.cookie = 'auth-token=' + res.data.token + "; expires=" + expires +";";                      
             document.cookie = 'auth-name=' + res.data.username + "; expires=" + expires +";";
-            history.push(from);
-            dispatch({type:"LOGGED_IN",payload:true})
+            history.push("/login");
         })
         .catch((error) =>{
-            setLoginMessage(error.message);
+            setRegisterMessage(error);
             console.log(error);           
         })
     }
@@ -38,16 +42,15 @@ export default function Login()
     return (
         <div class="login-wrapper fadeInDown">            
             <div id="formContent">
-                <h2 class="active"> Sign In </h2>                    
+                <h2 class="active"> Register Account </h2>                    
                 <form onSubmit={e=>handleSubmit(e)}>
                     <input type="text" id="login" class="fadeIn second" name="login" required placeholder="username" onChange={e=>setUsername(e.target.value)} />
                     <input type="password" id="password" class="fadeIn third" name="password" required placeholder="password" onChange={e=>setPassword(e.target.value)} />
-                    <input type="submit" class="fadeIn fourth" value="Log In" />
-                    <div><a href="./register">Register an account</a></div>
-                    <div>{loginMessage}</div>
+                    <input type="password" id="confirmpassword" class="fadeIn third" name="confirm" required placeholder="confirm password" onChange={e=>setConfirmPassword(e.target.value)} />
+                    <input type="submit" class="fadeIn fourth" value="Create Account" />
+                    <div>{setRegisterMessage}</div>
                 </form>
             </div>
-            
         </div>
     );
 }

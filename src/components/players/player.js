@@ -1,10 +1,10 @@
 import React from 'react';
-import {SquadContext} from '../contexts/squad';
+import {SquadContext} from '../../contexts/squad';
 import { Avatar } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import logo from '../assets/england-logo.png'
+import logo from '../../assets/england-logo.png'
 
 const Player=(props)=>{
     const[state,dispatch] = React.useContext(SquadContext);

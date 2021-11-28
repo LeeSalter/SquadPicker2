@@ -1,5 +1,5 @@
 import React from 'react';
-import { SquadContext } from '../contexts/squad';
+import { SquadContext } from '../../contexts/squad';
 
 const FormationPicker = ()=> {
 

@@ -1,14 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { API_BASE } from '../constants/constants';
-import { SquadContext } from '../contexts/squad';
-import { loadTeam, canLoadSquad, squadSaved } from '../actions/team';
-import { loadFormation } from '../actions/formation';
-import Player from './player';
+import { API_BASE } from '../../constants/constants';
+import { SquadContext } from '../../contexts/squad';
+import Player from '../players/player';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
-import getCookieValue from './authentication/getCookieValue';
+import getCookieValue from '../authentication/getCookieValue';
 import $ from 'jquery';
 
 const Team = ()=> {
