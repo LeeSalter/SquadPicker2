@@ -31,10 +31,10 @@ export default function Register()
             const expires = "expires=" + date.toUTCString();
             document.cookie = 'auth-token=' + res.data.token + "; expires=" + expires +";";                      
             document.cookie = 'auth-name=' + res.data.username + "; expires=" + expires +";";
-            history.push("/login");
+            history.push("/login");            
         })
         .catch((error) =>{
-            setRegisterMessage(error);
+            setRegisterMessage(error.response.data);
             console.log(error);           
         })
     }
@@ -48,7 +48,7 @@ export default function Register()
                     <input type="password" id="password" class="fadeIn third" name="password" required placeholder="password" onChange={e=>setPassword(e.target.value)} />
                     <input type="password" id="confirmpassword" class="fadeIn third" name="confirm" required placeholder="confirm password" onChange={e=>setConfirmPassword(e.target.value)} />
                     <input type="submit" class="fadeIn fourth" value="Create Account" />
-                    <div>{setRegisterMessage}</div>
+                    <div>{registerMessage}</div>
                 </form>
             </div>
         </div>

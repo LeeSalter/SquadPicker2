@@ -11,6 +11,7 @@ import $ from 'jquery';
 const Team = ()=> {
     const[state,dispatch]=React.useContext(SquadContext);
 
+        const [saveResult,setSaveResult]=React.useState("");
         const token=getCookieValue("auth-token");
         const selectedPlayers=state.selectedPlayers;
         const playerCount=selectedPlayers.length;
@@ -19,6 +20,7 @@ const Team = ()=> {
         const teamIsValid = selectedPlayers.filter(p=>p.validity==="player-valid").length===11;
 
         const saveState=()=>{
+            setSaveResult("");
             var selectedPlayersIds = selectedPlayers.map(p=> {return p.id});
             var formationId=state.selectedFormation.id;
             var postBody={
@@ -36,6 +38,7 @@ const Team = ()=> {
                 headers: {"Authorization": 'Bearer ' + token }
             });
             dispatch({type:"TEAM_SAVED",payload:{selectedPlayers,formationId}})
+            setSaveResult("Team saved successfully");
         }
 
         return (
@@ -48,6 +51,7 @@ const Team = ()=> {
                 </Box>
                 <div className="buttons">
                     <Button variant="contained" disabled={!teamIsValid} onClick={saveState}>Save Team</Button>
+                    <p>{state.teamSaveResult}</p>
                 </div>
                 </div>
         )        

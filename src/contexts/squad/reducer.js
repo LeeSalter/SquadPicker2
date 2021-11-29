@@ -16,7 +16,8 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 selectedPlayers:updatedState.selectedPlayers,
-                unselectedPlayers:updatedState.unselectedPlayers
+                unselectedPlayers:updatedState.unselectedPlayers,
+                teamSaveResult:""
             }
         case "DESELECT_PLAYER":
             const deselectedPlayer = action.payload;
@@ -31,7 +32,8 @@ export const reducer = (state, action) => {
                 return {
                     ...state,
                     selectedPlayers:updatedState.selectedPlayers,
-                    unselectedPlayers:updatedState.unselectedPlayers
+                    unselectedPlayers:updatedState.unselectedPlayers,
+                    teamSaveResult:""
                 }
         case "INITIAL_SQUAD_LOADED":{
             return {...state,
@@ -55,13 +57,18 @@ export const reducer = (state, action) => {
             return{...state,
             selectedFormation:action.payload,
             selectedPlayers:finalState.selectedPlayers,
-            unselectedPlayers:finalState.unselectedPlayers}
+            unselectedPlayers:finalState.unselectedPlayers,
+            teamSaveResult:""}
         case "PLAYER_CREATED":
             return{...state,
             unselectedPlayers: [...state.unselectedPlayers,action.payload]}
         case "TEAMS_LOADED":
             return{...state,
             savedTeams: action.payload}
+        case "TEAM_SAVED":
+            console.log("Team saved");
+            return {...state,
+            teamSaveResult:"Team saved successfully."}
         default:
             return state;
     }   
